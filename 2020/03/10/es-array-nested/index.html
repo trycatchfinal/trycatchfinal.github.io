@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Nginx,">
+  <meta name="keywords" content="elasticsearch,">
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="背景当前部署的nginx服务器有安全问题，需要版本升级。 约束条件  公司内网环境，不能使用外网 操作系统CentOS 7  决定使用RPM文件方式进行更新。 步骤下载RPM文件从Nginx官方的YUM安装方式，可以找到RPM文件的地址:http://nginx.org/packages/centos/。 1234567891011121314[nginx-stable]name=nginx st">
-<meta name="keywords" content="Nginx">
+<meta name="description" content="目前情况Elasticsearch中处理对象数组有两种格式array和nested，但这两种都有一定的不足。以下面的文档为例： 123456789101112&amp;#123;  &amp;quot;user&amp;quot;: [    &amp;#123;      &amp;quot;first&amp;quot;: &amp;quot;John&amp;quot;,      &amp;quot;last&amp;quot;: &amp;quot;Smith&amp;quot;">
+<meta name="keywords" content="elasticsearch">
 <meta property="og:type" content="article">
-<meta property="og:title" content="升级nginx">
-<meta property="og:url" content="http://yoursite.com/2019/07/18/upgrade-nginx/index.html">
+<meta property="og:title" content="一种处理Elasticsearch对象数据类型的方式">
+<meta property="og:url" content="http://yoursite.com/2020/03/10/es-array-nested/index.html">
 <meta property="og:site_name" content="GoToCode">
-<meta property="og:description" content="背景当前部署的nginx服务器有安全问题，需要版本升级。 约束条件  公司内网环境，不能使用外网 操作系统CentOS 7  决定使用RPM文件方式进行更新。 步骤下载RPM文件从Nginx官方的YUM安装方式，可以找到RPM文件的地址:http://nginx.org/packages/centos/。 1234567891011121314[nginx-stable]name=nginx st">
+<meta property="og:description" content="目前情况Elasticsearch中处理对象数组有两种格式array和nested，但这两种都有一定的不足。以下面的文档为例： 123456789101112&amp;#123;  &amp;quot;user&amp;quot;: [    &amp;#123;      &amp;quot;first&amp;quot;: &amp;quot;John&amp;quot;,      &amp;quot;last&amp;quot;: &amp;quot;Smith&amp;quot;">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-03-07T02:58:37.184Z">
+<meta property="og:updated_time" content="2020-03-10T10:13:24.472Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="升级nginx">
-<meta name="twitter:description" content="背景当前部署的nginx服务器有安全问题，需要版本升级。 约束条件  公司内网环境，不能使用外网 操作系统CentOS 7  决定使用RPM文件方式进行更新。 步骤下载RPM文件从Nginx官方的YUM安装方式，可以找到RPM文件的地址:http://nginx.org/packages/centos/。 1234567891011121314[nginx-stable]name=nginx st">
+<meta name="twitter:title" content="一种处理Elasticsearch对象数据类型的方式">
+<meta name="twitter:description" content="目前情况Elasticsearch中处理对象数组有两种格式array和nested，但这两种都有一定的不足。以下面的文档为例： 123456789101112&amp;#123;  &amp;quot;user&amp;quot;: [    &amp;#123;      &amp;quot;first&amp;quot;: &amp;quot;John&amp;quot;,      &amp;quot;last&amp;quot;: &amp;quot;Smith&amp;quot;">
 
 
 
@@ -130,13 +130,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/07/18/upgrade-nginx/">
+  <link rel="canonical" href="http://yoursite.com/2020/03/10/es-array-nested/">
 
 
 
 
 
-  <title>升级nginx | GoToCode</title>
+  <title>一种处理Elasticsearch对象数据类型的方式 | GoToCode</title>
   
 
 
@@ -243,7 +243,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/18/upgrade-nginx/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/10/es-array-nested/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="trycatchfinal">
@@ -260,7 +260,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">升级nginx</h1>
+          <h1 class="post-title" itemprop="name headline">一种处理Elasticsearch对象数据类型的方式</h1>
         
 
         <div class="post-meta">
@@ -272,8 +272,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-18T22:38:21+08:00">
-                2019-07-18
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-10T17:10:46+08:00">
+                2020-03-10
               </time>
             
 
@@ -310,35 +310,31 @@
       
 
       
-        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>当前部署的nginx服务器有安全问题，需要版本升级。</p>
-<p>约束条件</p>
-<ul>
-<li>公司内网环境，不能使用外网</li>
-<li>操作系统CentOS 7</li>
-</ul>
-<p>决定使用RPM文件方式进行更新。</p>
-<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><h3 id="下载RPM文件"><a href="#下载RPM文件" class="headerlink" title="下载RPM文件"></a>下载RPM文件</h3><p>从<a href="http://nginx.org/en/linux_packages.html#RHEL-CentOS" target="_blank" rel="noopener">Nginx官方的YUM安装方式</a>，可以找到RPM文件的地址:<a href="http://nginx.org/packages/centos/。" target="_blank" rel="noopener">http://nginx.org/packages/centos/。</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[nginx-stable]</span><br><span class="line">name=nginx stable repo</span><br><span class="line">baseurl=http://nginx.org/packages/centos/$releasever/$basearch/</span><br><span class="line">gpgcheck=1</span><br><span class="line">enabled=1</span><br><span class="line">gpgkey=https://nginx.org/keys/nginx_signing.key</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[nginx-mainline]</span><br><span class="line">name=nginx mainline repo</span><br><span class="line">baseurl=http://nginx.org/packages/mainline/centos/$releasever/$basearch/</span><br><span class="line">gpgcheck=1</span><br><span class="line">enabled=0</span><br><span class="line">gpgkey=https://nginx.org/keys/nginx_signing.key</span><br></pre></td></tr></table></figure>
+        <h2 id="目前情况"><a href="#目前情况" class="headerlink" title="目前情况"></a>目前情况</h2><p>Elasticsearch中处理对象数组有两种格式array和nested，但这两种都有一定的不足。<br>以下面的文档为例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;user&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;first&quot;: &quot;John&quot;,</span><br><span class="line">      &quot;last&quot;: &quot;Smith&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;first&quot;: &quot;Alice&quot;,</span><br><span class="line">      &quot;last&quot;: &quot;White&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>在目录<code>/packages/centos/7/x86_64/RPMS/</code>(7对应CentOS 7)下，可以下载到新版本的nginx RPM文件以及相应版本的Module安装文件。</p>
-<h3 id="停止nginx服务"><a href="#停止nginx服务" class="headerlink" title="停止nginx服务"></a>停止nginx服务</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl stop nginx</span><br></pre></td></tr></table></figure>
+<p>如果在mapping中以array存储，那么实际存储为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">user.first:[&quot;John&quot;,&quot;Alice&quot;]</span><br><span class="line">user.last:[&quot;Smith&quot;,&quot;White&quot;]</span><br></pre></td></tr></table></figure>
 
-<h3 id="拷贝RPM文件到服务器"><a href="#拷贝RPM文件到服务器" class="headerlink" title="拷贝RPM文件到服务器"></a>拷贝RPM文件到服务器</h3><p>使用rz命令拷贝文件</p>
-<h3 id="卸载nginx-Module"><a href="#卸载nginx-Module" class="headerlink" title="卸载nginx Module"></a>卸载nginx Module</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum remove nginx-mod*</span><br></pre></td></tr></table></figure>
+<p>如果以must的方式查询<code>user.first:John</code>和<code>user.last:White</code>,那么这篇文档也会命中,这不是我们期望的。  </p>
+<p>如果在mapping中以array存储，Elasticsearch将每个对象视为一个doc，这例子会存储3个doc，会严重影响ES写入和查询的效率。</p>
+<h2 id="Flatten格式"><a href="#Flatten格式" class="headerlink" title="Flatten格式"></a>Flatten格式</h2><p>我想到的存储方式很简单，就是将对象数组打平保存为一个<code>keyword</code>类型的字符串数组，故起名<strong>Flatten</strong>格式。<br>以上面文档为例,数组对象需要转换为下面的格式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&quot;user.flatten&quot;: [</span><br><span class="line">    &quot;first:John&quot;,</span><br><span class="line">    &quot;last:Smith&quot;,</span><br><span class="line">    &quot;first:John&amp;last:Smith&quot;,</span><br><span class="line">    &quot;first:Alice&quot;,</span><br><span class="line">    &quot;White:last&quot;,</span><br><span class="line">    &quot;first:Alice&amp;last:White&quot;</span><br><span class="line">  ]</span><br></pre></td></tr></table></figure>
 
-<p>使用下面的命令，可以查看已安装的module</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum list |grep ngnix-mod</span><br></pre></td></tr></table></figure>
+<p>这样以must的方式查询<code>user.first:John</code>和<code>user.last:White</code>，可以转换为term查询<code>first:John&amp;last:White</code>,并不会命中文档。<br>同时，这种方式还是保存1个doc，避免了nested的缺点。</p>
+<p>对于flatten格式有几点说明</p>
+<h3 id="user-flatten数组的大小"><a href="#user-flatten数组的大小" class="headerlink" title="user.flatten数组的大小"></a>user.flatten数组的大小</h3><p>如果user对象个数为M，user属性个数为N，那么其数组大小为<code>(2^N-1)*M</code>。</p>
+<h3 id="对象为空怎么处理"><a href="#对象为空怎么处理" class="headerlink" title="对象为空怎么处理"></a>对象为空怎么处理</h3><p>建议以<code>null</code>方式保存，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">     &quot;first&quot;: &quot;John&quot;,</span><br><span class="line">     &quot;last&quot;: null</span><br><span class="line"> 	&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="升级nginx"><a href="#升级nginx" class="headerlink" title="升级nginx"></a>升级nginx</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo rpm -Uvh [nginx 包路径]</span><br></pre></td></tr></table></figure>
+<p>转换后的格式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">	&quot;first:John&quot;,</span><br><span class="line">    &quot;last:null&quot;,</span><br><span class="line">    &quot;first:John&amp;last:null&quot;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
 
-<h3 id="安装新版本的nginx-Module"><a href="#安装新版本的nginx-Module" class="headerlink" title="安装新版本的nginx Module"></a>安装新版本的nginx Module</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo rpm -i [nginx moduel 包路径]</span><br></pre></td></tr></table></figure>
-
-<h3 id="启动nginx服务"><a href="#启动nginx服务" class="headerlink" title="启动nginx服务"></a>启动nginx服务</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start nginx</span><br></pre></td></tr></table></figure>
-
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
-<li><a href="https://qizhanming.com/blog/2018/08/06/how-to-install-nginx-on-centos-7" target="_blank" rel="noopener">https://qizhanming.com/blog/2018/08/06/how-to-install-nginx-on-centos-7</a></li>
-<li><a href="http://nginx.org/en/linux_packages.html#RHEL-CentOS" target="_blank" rel="noopener">http://nginx.org/en/linux_packages.html#RHEL-CentOS</a></li>
-<li><a href="https://blog.csdn.net/jiangzeyin_/article/details/80397009" target="_blank" rel="noopener">https://blog.csdn.net/jiangzeyin_/article/details/80397009</a></li>
+<h3 id="保存和查询对于对象属性的处理顺序要保持一致"><a href="#保存和查询对于对象属性的处理顺序要保持一致" class="headerlink" title="保存和查询对于对象属性的处理顺序要保持一致"></a>保存和查询对于对象属性的处理顺序要保持一致</h3><p>上述例子都是按<code>first&amp;last</code>顺序存储的，那么以must的方式查询<code>user.first:John</code>和<code>user.last:White</code>也要以<code>first:John&amp;last:White</code>方式查询，不能用<code>last:White&amp;first:John</code>。</p>
+<h3 id="不足"><a href="#不足" class="headerlink" title="不足"></a>不足</h3><ul>
+<li>需要自己编码将JSON对象转换为字符串数组</li>
+<li>需要自己编码转换查询语句</li>
+<li>只支持term查询</li>
 </ul>
 
       
@@ -357,7 +353,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Nginx/" rel="tag"># Nginx</a>
+            <a href="/tags/elasticsearch/" rel="tag"># elasticsearch</a>
           
         </div>
       
@@ -370,15 +366,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2020/03/07/es-sentense-paragraph/" rel="next" title="使用Elasticsearch实现同段和同句搜索">
+                <i class="fa fa-chevron-left"></i> 使用Elasticsearch实现同段和同句搜索
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/03/07/es-sentense-paragraph/" rel="prev" title="使用Elasticsearch实现同段和同句搜索">
-                使用Elasticsearch实现同段和同句搜索 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -501,7 +497,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤"><span class="nav-number">2.</span> <span class="nav-text">步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#下载RPM文件"><span class="nav-number">2.1.</span> <span class="nav-text">下载RPM文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#停止nginx服务"><span class="nav-number">2.2.</span> <span class="nav-text">停止nginx服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#拷贝RPM文件到服务器"><span class="nav-number">2.3.</span> <span class="nav-text">拷贝RPM文件到服务器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#卸载nginx-Module"><span class="nav-number">2.4.</span> <span class="nav-text">卸载nginx Module</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#升级nginx"><span class="nav-number">2.5.</span> <span class="nav-text">升级nginx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装新版本的nginx-Module"><span class="nav-number">2.6.</span> <span class="nav-text">安装新版本的nginx Module</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动nginx服务"><span class="nav-number">2.7.</span> <span class="nav-text">启动nginx服务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">3.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目前情况"><span class="nav-number">1.</span> <span class="nav-text">目前情况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Flatten格式"><span class="nav-number">2.</span> <span class="nav-text">Flatten格式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#user-flatten数组的大小"><span class="nav-number">2.1.</span> <span class="nav-text">user.flatten数组的大小</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对象为空怎么处理"><span class="nav-number">2.2.</span> <span class="nav-text">对象为空怎么处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#保存和查询对于对象属性的处理顺序要保持一致"><span class="nav-number">2.3.</span> <span class="nav-text">保存和查询对于对象属性的处理顺序要保持一致</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不足"><span class="nav-number">2.4.</span> <span class="nav-text">不足</span></a></li></ol></li></ol></div>
             
 
           </div>
