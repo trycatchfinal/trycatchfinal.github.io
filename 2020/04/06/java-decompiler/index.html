@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="elasticsearch,">
+  <meta name="keywords" content="java-decompiler java,">
 
 
 
@@ -79,18 +79,21 @@
 
 
 
-<meta name="description" content="目前情况Elasticsearch中处理对象数组有两种格式array和nested，但这两种都有一定的不足。以下面的文档为例： 123456789101112&amp;#123;  &amp;quot;user&amp;quot;: [    &amp;#123;      &amp;quot;first&amp;quot;: &amp;quot;John&amp;quot;,      &amp;quot;last&amp;quot;: &amp;quot;Smith&amp;quot;">
-<meta name="keywords" content="elasticsearch">
+<meta name="description" content="语法糖Java语言设计者为了在工程上提高开发效率，设计了很多语法糖。Java反编译工具可以反编译class文件或jar包文件，得到Java源代码。只是，有时候我们需要得到包含语法糖的代码，有时候，需要“剥开”语法糖的代码。比如，需要了解代码的业务逻辑是，带糖的代码更易读；我们在研究Java编译逻辑时，需要不带糖的代码，看看这些糖到底隐藏了什么。 FernflowerIDEA 一般会默认安装插件Ja">
+<meta name="keywords" content="java-decompiler java">
 <meta property="og:type" content="article">
-<meta property="og:title" content="一种处理Elasticsearch对象数组类型的方式">
-<meta property="og:url" content="http://yoursite.com/2020/03/10/es-array-nested/index.html">
+<meta property="og:title" content="Java反编译工具推荐-Bytecode Viewer">
+<meta property="og:url" content="http://yoursite.com/2020/04/06/java-decompiler/index.html">
 <meta property="og:site_name" content="GoToCode">
-<meta property="og:description" content="目前情况Elasticsearch中处理对象数组有两种格式array和nested，但这两种都有一定的不足。以下面的文档为例： 123456789101112&amp;#123;  &amp;quot;user&amp;quot;: [    &amp;#123;      &amp;quot;first&amp;quot;: &amp;quot;John&amp;quot;,      &amp;quot;last&amp;quot;: &amp;quot;Smith&amp;quot;">
+<meta property="og:description" content="语法糖Java语言设计者为了在工程上提高开发效率，设计了很多语法糖。Java反编译工具可以反编译class文件或jar包文件，得到Java源代码。只是，有时候我们需要得到包含语法糖的代码，有时候，需要“剥开”语法糖的代码。比如，需要了解代码的业务逻辑是，带糖的代码更易读；我们在研究Java编译逻辑时，需要不带糖的代码，看看这些糖到底隐藏了什么。 FernflowerIDEA 一般会默认安装插件Ja">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-03-10T12:30:37.391Z">
+<meta property="og:image" content="http://yoursite.com/2020/04/06/java-decompiler/bytecode-viewer.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/06/java-decompiler/sugar-enums.png">
+<meta property="og:updated_time" content="2020-04-06T09:53:23.896Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="一种处理Elasticsearch对象数组类型的方式">
-<meta name="twitter:description" content="目前情况Elasticsearch中处理对象数组有两种格式array和nested，但这两种都有一定的不足。以下面的文档为例： 123456789101112&amp;#123;  &amp;quot;user&amp;quot;: [    &amp;#123;      &amp;quot;first&amp;quot;: &amp;quot;John&amp;quot;,      &amp;quot;last&amp;quot;: &amp;quot;Smith&amp;quot;">
+<meta name="twitter:title" content="Java反编译工具推荐-Bytecode Viewer">
+<meta name="twitter:description" content="语法糖Java语言设计者为了在工程上提高开发效率，设计了很多语法糖。Java反编译工具可以反编译class文件或jar包文件，得到Java源代码。只是，有时候我们需要得到包含语法糖的代码，有时候，需要“剥开”语法糖的代码。比如，需要了解代码的业务逻辑是，带糖的代码更易读；我们在研究Java编译逻辑时，需要不带糖的代码，看看这些糖到底隐藏了什么。 FernflowerIDEA 一般会默认安装插件Ja">
+<meta name="twitter:image" content="http://yoursite.com/2020/04/06/java-decompiler/bytecode-viewer.png">
 
 
 
@@ -130,13 +133,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/03/10/es-array-nested/">
+  <link rel="canonical" href="http://yoursite.com/2020/04/06/java-decompiler/">
 
 
 
 
 
-  <title>一种处理Elasticsearch对象数组类型的方式 | GoToCode</title>
+  <title>Java反编译工具推荐-Bytecode Viewer | GoToCode</title>
   
 
 
@@ -243,7 +246,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/10/es-array-nested/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/06/java-decompiler/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="trycatchfinal">
@@ -260,7 +263,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">一种处理Elasticsearch对象数组类型的方式</h1>
+          <h1 class="post-title" itemprop="name headline">Java反编译工具推荐-Bytecode Viewer</h1>
         
 
         <div class="post-meta">
@@ -272,8 +275,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-10T17:10:46+08:00">
-                2020-03-10
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-06T16:56:26+08:00">
+                2020-04-06
               </time>
             
 
@@ -310,32 +313,16 @@
       
 
       
-        <h2 id="目前情况"><a href="#目前情况" class="headerlink" title="目前情况"></a>目前情况</h2><p>Elasticsearch中处理对象数组有两种格式array和nested，但这两种都有一定的不足。<br>以下面的文档为例：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;user&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;first&quot;: &quot;John&quot;,</span><br><span class="line">      &quot;last&quot;: &quot;Smith&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;first&quot;: &quot;Alice&quot;,</span><br><span class="line">      &quot;last&quot;: &quot;White&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <h2 id="语法糖"><a href="#语法糖" class="headerlink" title="语法糖"></a>语法糖</h2><p>Java语言设计者为了在工程上提高开发效率，设计了很多语法糖。<br>Java反编译工具可以反编译class文件或jar包文件，得到Java源代码。<br>只是，有时候我们需要得到包含语法糖的代码，有时候，需要“剥开”语法糖的代码。<br>比如，需要了解代码的业务逻辑是，带糖的代码更易读；我们在研究Java编译逻辑时，需要不带糖的代码，看看这些糖到底隐藏了什么。</p>
+<h2 id="Fernflower"><a href="#Fernflower" class="headerlink" title="Fernflower"></a>Fernflower</h2><p>IDEA 一般会默认安装插件<code>Java Bytecode Decompiler</code>.这个插件使用了Java反编译工具<code>Fernflower</code>，而<code>Fernflower</code>反编译后源代码很多是包含语法糖的。<br><code>enum</code>是Java的一个语法糖，这里以其为例，看一下效果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public enum Sex &#123;</span><br><span class="line">    MALE,</span><br><span class="line">    FEMALE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>如果在mapping中以array存储，那么实际存储为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">user.first:[&quot;John&quot;,&quot;Alice&quot;]</span><br><span class="line">user.last:[&quot;Smith&quot;,&quot;White&quot;]</span><br></pre></td></tr></table></figure>
+<p>查看class文件,和源代码基本没有差异</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">//</span><br><span class="line">// Source code recreated from a .class file by IntelliJ IDEA</span><br><span class="line">// (powered by Fernflower decompiler)</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line">public enum Sex &#123;</span><br><span class="line">    MALE,</span><br><span class="line">    FEMALE;</span><br><span class="line"></span><br><span class="line">    private Sex() &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>如果以must的方式查询<code>user.first:John</code>和<code>user.last:White</code>,那么这篇文档也会命中,这不是我们期望的。  </p>
-<p>如果在mapping中以array存储，Elasticsearch将每个对象视为一个doc，这例子会存储3个doc，会严重影响ES写入和查询的效率。</p>
-<h2 id="Flatten格式"><a href="#Flatten格式" class="headerlink" title="Flatten格式"></a>Flatten格式</h2><p>我想到的存储方式很简单，就是将对象数组打平保存为一个<code>keyword</code>类型的字符串数组，故起名<strong>Flatten</strong>格式。<br>以上面文档为例,数组对象需要转换为下面的格式</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&quot;user.flatten&quot;: [</span><br><span class="line">    &quot;first:John&quot;,</span><br><span class="line">    &quot;last:Smith&quot;,</span><br><span class="line">    &quot;first:John&amp;last:Smith&quot;,</span><br><span class="line">    &quot;first:Alice&quot;,</span><br><span class="line">    &quot;White:last&quot;,</span><br><span class="line">    &quot;first:Alice&amp;last:White&quot;</span><br><span class="line">  ]</span><br></pre></td></tr></table></figure>
-
-<p>这样以must的方式查询<code>user.first:John</code>和<code>user.last:White</code>，可以转换为term查询<code>first:John&amp;last:White</code>,并不会命中文档。<br>同时，这种方式还是保存1个doc，避免了nested的缺点。</p>
-<p>对于flatten格式有几点说明</p>
-<h3 id="user-flatten数组的大小"><a href="#user-flatten数组的大小" class="headerlink" title="user.flatten数组的大小"></a>user.flatten数组的大小</h3><p>如果user对象个数为M，user属性个数为N，那么其数组大小为<code>(2^N-1)*M</code>。</p>
-<h3 id="对象为空怎么处理"><a href="#对象为空怎么处理" class="headerlink" title="对象为空怎么处理"></a>对象为空怎么处理</h3><p>建议以<code>null</code>方式保存，例如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">     &quot;first&quot;: &quot;John&quot;,</span><br><span class="line">     &quot;last&quot;: null</span><br><span class="line"> 	&#125;</span><br></pre></td></tr></table></figure>
-
-<p>转换后的格式</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">	&quot;first:John&quot;,</span><br><span class="line">    &quot;last:null&quot;,</span><br><span class="line">    &quot;first:John&amp;last:null&quot;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-
-<h3 id="保存和查询对于对象属性的处理顺序要保持一致"><a href="#保存和查询对于对象属性的处理顺序要保持一致" class="headerlink" title="保存和查询对于对象属性的处理顺序要保持一致"></a>保存和查询对于对象属性的处理顺序要保持一致</h3><p>上述例子都是按<code>first&amp;last</code>顺序存储的，那么以must的方式查询<code>user.first:John</code>和<code>user.last:White</code>也要以<code>first:John&amp;last:White</code>方式查询，不能用<code>last:White&amp;first:John</code>。</p>
-<h3 id="不足"><a href="#不足" class="headerlink" title="不足"></a>不足</h3><ul>
-<li>需要自己编码将JSON对象转换为字符串数组</li>
-<li>需要自己编码转换查询语句</li>
-<li>只支持term查询</li>
-</ul>
+<h2 id="CFR"><a href="#CFR" class="headerlink" title="CFR"></a>CFR</h2><p><a href="http://www.benf.org/other/cfr/" target="_blank" rel="noopener">CFR</a>是另外一个Java反编译工具。<br>其提供了一些开关，让我们选择生成的源代码是否包含糖。<br>但是，其生成的源代码为纯文本文件，不是一个GUI工具，用户体验并不好。</p>
+<h2 id="Bytecode-Viewer"><a href="#Bytecode-Viewer" class="headerlink" title="Bytecode Viewer"></a>Bytecode Viewer</h2><p><a href="https://github.com/Konloch/bytecode-viewer" target="_blank" rel="noopener">Bytecode Viewer</a>是一个强大的反编译工具，其集成了6个Java反编译库（包含Fernflower和CFR），Andorid反编译类库和字节码类库。<br>这个工具提供GUI界面，可以提升使用CFR的用户体验。<br>下面上面<code>enum</code>示例的反编译效果：<br><img src="/2020/04/06/java-decompiler/bytecode-viewer.png" alt="avatar">  </p>
+<p>下图展示了CFR的语法糖开关：<br><img src="/2020/04/06/java-decompiler/sugar-enums.png" alt="avatar">  </p>
 
       
     </div>
@@ -353,7 +340,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/elasticsearch/" rel="tag"># elasticsearch</a>
+            <a href="/tags/java-decompiler-java/" rel="tag"># java-decompiler java</a>
           
         </div>
       
@@ -366,8 +353,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/03/07/es-sentense-paragraph/" rel="next" title="使用Elasticsearch实现同段和同句搜索">
-                <i class="fa fa-chevron-left"></i> 使用Elasticsearch实现同段和同句搜索
+              <a href="/2020/03/10/es-array-nested/" rel="next" title="一种处理Elasticsearch对象数组类型的方式">
+                <i class="fa fa-chevron-left"></i> 一种处理Elasticsearch对象数组类型的方式
               </a>
             
           </div>
@@ -375,10 +362,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/04/06/java-decompiler/" rel="prev" title="Java反编译工具推荐-Bytecode Viewer">
-                Java反编译工具推荐-Bytecode Viewer <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -501,7 +484,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目前情况"><span class="nav-number">1.</span> <span class="nav-text">目前情况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Flatten格式"><span class="nav-number">2.</span> <span class="nav-text">Flatten格式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#user-flatten数组的大小"><span class="nav-number">2.1.</span> <span class="nav-text">user.flatten数组的大小</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对象为空怎么处理"><span class="nav-number">2.2.</span> <span class="nav-text">对象为空怎么处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#保存和查询对于对象属性的处理顺序要保持一致"><span class="nav-number">2.3.</span> <span class="nav-text">保存和查询对于对象属性的处理顺序要保持一致</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不足"><span class="nav-number">2.4.</span> <span class="nav-text">不足</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#语法糖"><span class="nav-number">1.</span> <span class="nav-text">语法糖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fernflower"><span class="nav-number">2.</span> <span class="nav-text">Fernflower</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CFR"><span class="nav-number">3.</span> <span class="nav-text">CFR</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bytecode-Viewer"><span class="nav-number">4.</span> <span class="nav-text">Bytecode Viewer</span></a></li></ol></div>
             
 
           </div>
