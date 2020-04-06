@@ -89,7 +89,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2020/04/06/java-decompiler/bytecode-viewer.png">
 <meta property="og:image" content="http://yoursite.com/2020/04/06/java-decompiler/sugar-enums.png">
-<meta property="og:updated_time" content="2020-04-06T09:53:23.896Z">
+<meta property="og:updated_time" content="2020-04-06T09:58:49.573Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java反编译工具推荐-Bytecode Viewer">
 <meta name="twitter:description" content="语法糖Java语言设计者为了在工程上提高开发效率，设计了很多语法糖。Java反编译工具可以反编译class文件或jar包文件，得到Java源代码。只是，有时候我们需要得到包含语法糖的代码，有时候，需要“剥开”语法糖的代码。比如，需要了解代码的业务逻辑是，带糖的代码更易读；我们在研究Java编译逻辑时，需要不带糖的代码，看看这些糖到底隐藏了什么。 FernflowerIDEA 一般会默认安装插件Ja">
@@ -321,7 +321,11 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">//</span><br><span class="line">// Source code recreated from a .class file by IntelliJ IDEA</span><br><span class="line">// (powered by Fernflower decompiler)</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line">public enum Sex &#123;</span><br><span class="line">    MALE,</span><br><span class="line">    FEMALE;</span><br><span class="line"></span><br><span class="line">    private Sex() &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="CFR"><a href="#CFR" class="headerlink" title="CFR"></a>CFR</h2><p><a href="http://www.benf.org/other/cfr/" target="_blank" rel="noopener">CFR</a>是另外一个Java反编译工具。<br>其提供了一些开关，让我们选择生成的源代码是否包含糖。<br>但是，其生成的源代码为纯文本文件，不是一个GUI工具，用户体验并不好。</p>
-<h2 id="Bytecode-Viewer"><a href="#Bytecode-Viewer" class="headerlink" title="Bytecode Viewer"></a>Bytecode Viewer</h2><p><a href="https://github.com/Konloch/bytecode-viewer" target="_blank" rel="noopener">Bytecode Viewer</a>是一个强大的反编译工具，其集成了6个Java反编译库（包含Fernflower和CFR），Andorid反编译类库和字节码类库。<br>这个工具提供GUI界面，可以提升使用CFR的用户体验。<br>下面上面<code>enum</code>示例的反编译效果：<br><img src="/2020/04/06/java-decompiler/bytecode-viewer.png" alt="avatar">  </p>
+<h2 id="Bytecode-Viewer"><a href="#Bytecode-Viewer" class="headerlink" title="Bytecode Viewer"></a>Bytecode Viewer</h2><p><a href="https://github.com/Konloch/bytecode-viewer" target="_blank" rel="noopener">Bytecode Viewer</a>是一个强大的反编译工具，其集成了6个Java反编译库（包含Fernflower和CFR），Andorid反编译类库和字节码类库。<br>这个工具提供GUI界面，可以提升使用CFR的用户体验。<br>下面上面<code>enum</code>示例的反编译效果：  </p>
+<ul>
+<li>左边为Fernflower的反编译效果</li>
+<li>右边为CRF的反编译效果。我们可以看到enum其实是定义了一个继承自<code>Enum</code>类的子类<br><img src="/2020/04/06/java-decompiler/bytecode-viewer.png" alt="avatar">  </li>
+</ul>
 <p>下图展示了CFR的语法糖开关：<br><img src="/2020/04/06/java-decompiler/sugar-enums.png" alt="avatar">  </p>
 
       
