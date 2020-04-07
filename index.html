@@ -249,6 +249,169 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/07/enum/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="trycatchfinal">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GoToCode">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/04/07/enum/" itemprop="url">枚举类型需要重写hashcode()吗？</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-07T16:39:55+08:00">
+                2020-04-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>需要重写equals()方法的类，也需要重写hashcode(),不然在使用HashMap或者HashSet类时，会出现不正确的结果。<br>那么什么时候需要equals()方法呢？<br>Object类的equals()实现为比较对象的引用地址，所以，不想比较对象引用，而比较其他情况时，需要重写equals()方法。<br>大多情况下，我们需要比较对象的变量是否相等，此时，这种类型被称为“值类型”。<br>对于枚举类型，如果我们需要比较其变量相等情况时，看看是否需要重写equals()和hashcode()?</p>
+<h2 id="语法糖"><a href="#语法糖" class="headerlink" title="语法糖"></a>语法糖</h2><p>枚举类型enum为Java语言的一个语法糖，可以使用<a href="https://trycatchfinal.github.io/2020/04/06/java-decompiler/" target="_blank" rel="noopener">反编译工具</a>，看一下Java编译器是否如何实现enum的。<br>源代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">enum Sex&#123;</span><br><span class="line">    MALE,</span><br><span class="line">    FAMALE</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>反编译的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">static final class JavaSugar.Sex</span><br><span class="line">extends Enum&lt;JavaSugar.Sex&gt; &#123;</span><br><span class="line">    public static final /* enum */ JavaSugar.Sex MALE = new JavaSugar.Sex((String)&quot;MALE&quot;, (int)0);</span><br><span class="line">    public static final /* enum */ JavaSugar.Sex FAMALE = new JavaSugar.Sex((String)&quot;FAMALE&quot;, (int)1);</span><br><span class="line">    private static final /* synthetic */ JavaSugar.Sex[] $VALUES;</span><br><span class="line"></span><br><span class="line">    public static JavaSugar.Sex[] values() &#123;</span><br><span class="line">        return (JavaSugar.Sex[])$VALUES.clone();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static JavaSugar.Sex valueOf(String name) &#123;</span><br><span class="line">        return Enum.valueOf(JavaSugar.Sex.class, (String)name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private JavaSugar.Sex(String string, int n) &#123;</span><br><span class="line">        super((String)string, (int)n);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    static &#123;</span><br><span class="line">        $VALUES = new JavaSugar.Sex[]&#123;MALE, FAMALE&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过反编译后的代码，我们可以看到:</p>
+<ul>
+<li>构造函数为私有的，所有的枚举值都是静态创建。这属于懒汉式的单例模式，并且创建过程是线程安全的。</li>
+<li>类型和所有的枚举值都由final来修饰，并且所有方法对于变量操作都是只读的。说明这是一个不可变类型。</li>
+</ul>
+<p>枚举同时具备单例模式和不可变类型，这样整个Java应用中的枚举类型实例就只有定义的枚举值(MALE和FAMALE)。<br>这样，不同枚举值的变量(<code>name</code>)理论上是不会出现相等情况的（除非定义枚举值使用相同的变量值，但这个枚举的意义是相悖的）。引用不同的枚举对象，其枚举变量肯定是不同的。<br>所以，结果是： <strong>枚举类型不需要重写equals()方法和hashcode()方法</strong>。</p>
+<h2 id="枚举类型的反序列化"><a href="#枚举类型的反序列化" class="headerlink" title="枚举类型的反序列化"></a>枚举类型的反序列化</h2><p>枚举类型是否还有其他方式创建枚举值？我不能确定反序列化是否有新的方式来创建枚举值。<br>通过阅读反序列化的源代码，可以窥探一二。<br>默认情况下，序列化枚举实例，得到的结果为枚举的<code>name</code>变量值。<br>Enum类，提供了<code>valueOf(Class&lt;T&gt; enumType,String name)</code>方法，可以使用<code>name</code>值得到枚举实例。<br>其源代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public static &lt;T extends Enum&lt;T&gt;&gt; T valueOf(Class&lt;T&gt; enumType,</span><br><span class="line">                                            String name) &#123;</span><br><span class="line">    T result = enumType.enumConstantDirectory().get(name);</span><br><span class="line">    if (result != null)</span><br><span class="line">        return result;</span><br><span class="line">    if (name == null)</span><br><span class="line">        throw new NullPointerException(&quot;Name is null&quot;);</span><br><span class="line">    throw new IllegalArgumentException(</span><br><span class="line">        &quot;No enum constant &quot; + enumType.getCanonicalName() + &quot;.&quot; + name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再看一下<code>enumConstantDirectory()</code>方法：</p>
+<ul>
+<li>enumConstantDirectory为一个<code>name</code>-&gt;<code>Enum Type</code>的Map<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String, T&gt; enumConstantDirectory() &#123;</span><br><span class="line">    if (enumConstantDirectory == null) &#123;</span><br><span class="line">        T[] universe = getEnumConstantsShared();</span><br><span class="line">        if (universe == null)</span><br><span class="line">            throw new IllegalArgumentException(</span><br><span class="line">                getName() + &quot; is not an enum type&quot;);</span><br><span class="line">        Map&lt;String, T&gt; m = new HashMap&lt;&gt;(2 * universe.length);</span><br><span class="line">        for (T constant : universe)</span><br><span class="line">            m.put(((Enum&lt;?&gt;)constant).name(), constant);</span><br><span class="line">        enumConstantDirectory = m;</span><br><span class="line">    &#125;</span><br><span class="line">    return enumConstantDirectory;</span><br><span class="line">&#125;</span><br><span class="line">private volatile transient Map&lt;String, T&gt; enumConstantDirectory = null;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>再看一下<code>getEnumConstantsShared()</code>方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">T[] getEnumConstantsShared() &#123;</span><br><span class="line">    if (enumConstants == null) &#123;</span><br><span class="line">        if (!isEnum()) return null;</span><br><span class="line">        try &#123;</span><br><span class="line">            final Method values = getMethod(&quot;values&quot;);</span><br><span class="line">            java.security.AccessController.doPrivileged(</span><br><span class="line">                new java.security.PrivilegedAction&lt;Void&gt;() &#123;</span><br><span class="line">                    public Void run() &#123;</span><br><span class="line">                            values.setAccessible(true);</span><br><span class="line">                            return null;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;);</span><br><span class="line">            @SuppressWarnings(&quot;unchecked&quot;)</span><br><span class="line">            T[] temporaryConstants = (T[])values.invoke(null);</span><br><span class="line">            enumConstants = temporaryConstants;</span><br><span class="line">        &#125;</span><br><span class="line">        // These can happen when users concoct enum-like classes</span><br><span class="line">        // that don&apos;t comply with the enum spec.</span><br><span class="line">        catch (InvocationTargetException | NoSuchMethodException |</span><br><span class="line">               IllegalAccessException ex) &#123; return null; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return enumConstants;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述<code>getMethod(&quot;values&quot;)</code>方法，应该就是下面的方法。这样的话，<code>valueOf(Class&lt;T&gt; enumType,String name)</code>方法返回的枚举实例，并没有创建新的实例。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public static JavaSugar.Sex[] values() &#123;</span><br><span class="line">    return (JavaSugar.Sex[])$VALUES.clone();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>反序列化，有很多方式，这里看一下<code>ObjectInputStream</code>和<code>Gson</code>:</p>
+<h3 id="ObjectInputStream"><a href="#ObjectInputStream" class="headerlink" title="ObjectInputStream"></a>ObjectInputStream</h3><p>其核心代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">private Enum&lt;?&gt; readEnum(boolean unshared) throws IOException &#123;</span><br><span class="line">        if (bin.readByte() != TC_ENUM) &#123;</span><br><span class="line">            throw new InternalError();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ObjectStreamClass desc = readClassDesc(false);</span><br><span class="line">        if (!desc.isEnum()) &#123;</span><br><span class="line">            throw new InvalidClassException(&quot;non-enum class: &quot; + desc);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        int enumHandle = handles.assign(unshared ? unsharedMarker : null);</span><br><span class="line">        ClassNotFoundException resolveEx = desc.getResolveException();</span><br><span class="line">        if (resolveEx != null) &#123;</span><br><span class="line">            handles.markException(enumHandle, resolveEx);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        String name = readString(false);</span><br><span class="line">        Enum&lt;?&gt; result = null;</span><br><span class="line">        Class&lt;?&gt; cl = desc.forClass();</span><br><span class="line">        if (cl != null) &#123;</span><br><span class="line">            try &#123;</span><br><span class="line">                @SuppressWarnings(&quot;unchecked&quot;)</span><br><span class="line">                Enum&lt;?&gt; en = Enum.valueOf((Class)cl, name);</span><br><span class="line">                result = en;</span><br><span class="line">            &#125; catch (IllegalArgumentException ex) &#123;</span><br><span class="line">                throw (IOException) new InvalidObjectException(</span><br><span class="line">                    &quot;enum constant &quot; + name + &quot; does not exist in &quot; +</span><br><span class="line">                    cl).initCause(ex);</span><br><span class="line">            &#125;</span><br><span class="line">            if (!unshared) &#123;</span><br><span class="line">                handles.setObject(enumHandle, result);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        handles.finish(enumHandle);</span><br><span class="line">        passHandle = enumHandle;</span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>其创建实例的代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Enum&lt;?&gt; en = Enum.valueOf((Class)cl, name);</span><br></pre></td></tr></table></figure>
+
+<p>所以，其不会创建新的枚举实例。</p>
+<h3 id="Gson"><a href="#Gson" class="headerlink" title="Gson"></a>Gson</h3><p>核心代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">private static final class EnumTypeAdapter&lt;T extends Enum&lt;T&gt;&gt; extends TypeAdapter&lt;T&gt; &#123;</span><br><span class="line">    public EnumTypeAdapter(Class&lt;T&gt; classOfT) &#123;</span><br><span class="line">      try &#123;</span><br><span class="line">        for (T constant : classOfT.getEnumConstants()) &#123;</span><br><span class="line">          String name = constant.name();</span><br><span class="line">          SerializedName annotation = classOfT.getField(name).getAnnotation(SerializedName.class);</span><br><span class="line">          if (annotation != null) &#123;</span><br><span class="line">            name = annotation.value();</span><br><span class="line">            for (String alternate : annotation.alternate()) &#123;</span><br><span class="line">              nameToConstant.put(alternate, constant);</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">          nameToConstant.put(name, constant);</span><br><span class="line">          constantToName.put(constant, name);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; catch (NoSuchFieldException e) &#123;</span><br><span class="line">        throw new AssertionError(e);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>classOfT.getEnumConstants()</code>方法的源代码如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public T[] getEnumConstants() &#123;</span><br><span class="line">    T[] values = getEnumConstantsShared();</span><br><span class="line">    return (values != null) ? values.clone() : null;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个<code>getEnumConstantsShared()</code>方法，我们上面已经看过了。<br>这样，<code>Gson</code>反序列化，也不会产生新的实例。  </p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>反序列化，并不会创建新的枚举实例。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/06/java-decompiler/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -893,7 +1056,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
