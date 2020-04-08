@@ -25,6 +25,8 @@
 
 
 
+  <meta name="google-site-verification" content="xUNW_15du_FJlK97P7QJ2jwuZY2yR2sankxmeivwsbY">
+
 
 
 
@@ -136,6 +138,15 @@
 
 
 
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'true', 'auto');
+  ga('send', 'pageview');
+</script>
 
 
 
@@ -348,7 +359,7 @@
 <p>上述<code>getMethod(&quot;values&quot;)</code>方法，应该就是下面的方法。这样的话，<code>valueOf(Class&lt;T&gt; enumType,String name)</code>方法返回的枚举实例，并没有创建新的实例。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public static JavaSugar.Sex[] values() &#123;</span><br><span class="line">    return (JavaSugar.Sex[])$VALUES.clone();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>反序列化，有很多方式，这里看一下<code>ObjectInputStream</code>和<code>Gson</code>:</p>
+<p>反序列化，有很多方式，这里看一下<code>ObjectInputStream</code>和<code>Gson</code>两种方式:</p>
 <h3 id="ObjectInputStream"><a href="#ObjectInputStream" class="headerlink" title="ObjectInputStream"></a>ObjectInputStream</h3><p>其核心代码如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">private Enum&lt;?&gt; readEnum(boolean unshared) throws IOException &#123;</span><br><span class="line">        if (bin.readByte() != TC_ENUM) &#123;</span><br><span class="line">            throw new InternalError();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ObjectStreamClass desc = readClassDesc(false);</span><br><span class="line">        if (!desc.isEnum()) &#123;</span><br><span class="line">            throw new InvalidClassException(&quot;non-enum class: &quot; + desc);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        int enumHandle = handles.assign(unshared ? unsharedMarker : null);</span><br><span class="line">        ClassNotFoundException resolveEx = desc.getResolveException();</span><br><span class="line">        if (resolveEx != null) &#123;</span><br><span class="line">            handles.markException(enumHandle, resolveEx);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        String name = readString(false);</span><br><span class="line">        Enum&lt;?&gt; result = null;</span><br><span class="line">        Class&lt;?&gt; cl = desc.forClass();</span><br><span class="line">        if (cl != null) &#123;</span><br><span class="line">            try &#123;</span><br><span class="line">                @SuppressWarnings(&quot;unchecked&quot;)</span><br><span class="line">                Enum&lt;?&gt; en = Enum.valueOf((Class)cl, name);</span><br><span class="line">                result = en;</span><br><span class="line">            &#125; catch (IllegalArgumentException ex) &#123;</span><br><span class="line">                throw (IOException) new InvalidObjectException(</span><br><span class="line">                    &quot;enum constant &quot; + name + &quot; does not exist in &quot; +</span><br><span class="line">                    cl).initCause(ex);</span><br><span class="line">            &#125;</span><br><span class="line">            if (!unshared) &#123;</span><br><span class="line">                handles.setObject(enumHandle, result);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        handles.finish(enumHandle);</span><br><span class="line">        passHandle = enumHandle;</span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
